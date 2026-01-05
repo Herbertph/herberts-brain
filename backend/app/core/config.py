@@ -7,7 +7,6 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BASE_DIR / ".env", override=True)
 
 
-
 class Settings(BaseModel):
     env: str = os.getenv("ENV", "local")
 
@@ -21,5 +20,9 @@ class Settings(BaseModel):
     embedding_provider: str = os.getenv("EMBEDDING_PROVIDER", "ollama")
     ollama_url: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
     ollama_embed_model: str = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
+
+    # 🔥 flag chave
+    use_pgvector: bool = os.getenv("USE_PGVECTOR", "false").lower() == "true"
+
 
 settings = Settings()

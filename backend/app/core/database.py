@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from typing import Generator
+
 from app.core.config import settings
 
 
@@ -8,16 +9,21 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(
-    settings.database_url,
-    pool_pre_ping=True,
-)
+def get_engine():
+    return create_engine(
+        settings.database_url,
+        pool_pre_ping=True,
+    )
+
+
+engine = get_engine()
 
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
     autocommit=False,
 )
+
 
 def get_db() -> Generator:
     db = SessionLocal()

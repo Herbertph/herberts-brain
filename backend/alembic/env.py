@@ -1,4 +1,6 @@
 from logging.config import fileConfig
+from app.models import Base
+target_metadata = Base.metadata
 
 from sqlalchemy import create_engine, pool
 from alembic import context
