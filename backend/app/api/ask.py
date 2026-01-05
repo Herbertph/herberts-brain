@@ -5,23 +5,28 @@ from app.core.database import get_db
 from app.services.embeddings import embed_text
 from app.services.similarity import find_best_match
 from app.models import UnansweredQuestion
+from app.core.config import settings
 
 router = APIRouter(tags=["ask"])
 
 
 @router.post("/ask")
-def ask(user_question: str):
+def ask(user_question: str, db: Session = Depends(get_db)):
     print(">>> ENTERED /ask")
-    print("Question:", user_question)
 
-    try:
-        from app.services.embeddings import embed_text
-        print(">>> imported embed_text")
+    embedding = embed_text(user_question)
+    print(">>> embedding len:", len(embedding))
+    exists = (
+        db.query(UnansweredQuestion)
+        .filter(UnansweredQuestion.text == user_question)
+        .first()
+    )
 
-        embedding = embed_text(user_question)
-        print(">>> embedding len:", len(embedding))
+    if not exists:
+        unanswered = UnansweredQuestion(text=user_question)
+        db.add(unanswered)
+        db.commit()
 
-        return "ok"
-    except Exception:
-        traceback.print_exc()
-        raise
+    return {
+        "answer": "Ainda não sei responder. Vou aprender com isso."
+    }

@@ -1,6 +1,4 @@
 from logging.config import fileConfig
-from app.models import Base
-target_metadata = Base.metadata
 
 from sqlalchemy import create_engine, pool
 from alembic import context
@@ -11,7 +9,7 @@ from app.core.config import settings
 # Alembic Config object
 config = context.config
 
-# Logging configuration
+# Logging
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -20,7 +18,6 @@ target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in offline mode."""
     context.configure(
         url=settings.database_url,
         target_metadata=target_metadata,
@@ -34,7 +31,6 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in online mode."""
     connectable = create_engine(
         settings.database_url,
         poolclass=pool.NullPool,
