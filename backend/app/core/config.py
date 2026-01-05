@@ -1,8 +1,11 @@
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(BASE_DIR / ".env", override=True)
+
 
 
 class Settings(BaseModel):
@@ -18,6 +21,5 @@ class Settings(BaseModel):
     embedding_provider: str = os.getenv("EMBEDDING_PROVIDER", "ollama")
     ollama_url: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
     ollama_embed_model: str = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
-
 
 settings = Settings()
